@@ -25,7 +25,8 @@ const fetchCurrencyInfo = async (currencyCode: String): Promise<SingleAverageRes
 exchangeRouter.get("/:currency", currencyParser, async (req: Request, res: Response) => {
 	if(req.currency !== null){
 		const responseBody = await fetchCurrencyInfo(req.currency)
-		res.status(200).send(responseBody)
+		if(responseBody !== null) res.status(200).send(responseBody)
+		else res.status(401).send()
 	} else {
 		res.status(500).send();
 	} 
