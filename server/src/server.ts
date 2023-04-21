@@ -1,10 +1,12 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
+import { router } from './router';
 
 dotenv.config();
 const PORT =  process.env.PORT || "8080";
 const app = express();
 
+app.use("/", router);
 
 app.get("/", (req: Request, res: Response) => {
 	res.status(200);
