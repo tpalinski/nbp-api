@@ -1,5 +1,5 @@
 import express from 'express';
-import { exchangeRouter } from './exchange/exchangeRouter';
+import { exchangeRouter } from '../exchange/exchangeRouter';
 
 export const router = express();
 
