@@ -2,9 +2,10 @@
   "name": "nbp-api",
   "version": "1.0.0",
   "description": "A RESTful API providing information about currency prices",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\""
   },
   "repository": {
     "type": "git",
