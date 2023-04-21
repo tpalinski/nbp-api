@@ -1,7 +1,8 @@
 
 namespace Express {
 	interface Request {
-		currency: string?
+		currency: String?,
+		date: String?
 	}
 }
 
