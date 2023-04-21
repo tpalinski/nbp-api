@@ -1,5 +1,5 @@
 import express from 'express'
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { currencyParser } from '../routing/routeParsers'
 
 export const exchangeRouter = express()

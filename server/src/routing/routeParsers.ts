@@ -9,3 +9,12 @@ export const currencyParser = async (req: Request, res: Response, next: NextFunc
 		res.send("No currency supplied")
 	}
 }
+
+export const dateParser = async (req: Request, res: Response, next: NextFunction) => {
+	if(req.params.hasOwnProperty("date")){
+
+	} else {
+		res.status(400);
+		res.send("No date supplied")
+	}
+}
