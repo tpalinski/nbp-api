@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { router } from './router';
+import { router } from './routing/router';
 
 dotenv.config();
 const PORT =  process.env.PORT || "8080";
