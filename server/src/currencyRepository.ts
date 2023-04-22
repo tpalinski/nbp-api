@@ -1,5 +1,13 @@
 import moment from "moment";
 
+// This module serves as a lazy loaded cache for N-type requests
+// It synchronizes the indexes with NBP API whenever a request asking for data which is not cached comes:
+//	- it fetches relevant currency data (last 255 values)
+//	- it calculates all the min and max average or difference values for all 255 days for this currency
+//	- it stores it in averageData or differenceData
+// Result - first request is slower, however each subsequent one needs only to make one fetch request (check for update) and access already calculated data,
+// which makes it run in O(1) instead of O(n) (which is technically still O(1) as n = 255, it is still faster though)
+//	
 
 // Cached info about currency average exchange rate
 let averageData: CurrencyAverageInfo = {}
