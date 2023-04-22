@@ -12,7 +12,7 @@ export const currencyParser = async (req: Request, res: Response, next: NextFunc
 			req.currency = currency;
 			next();
 		} else {
-			res.status(404)
+			res.status(406)
 			res.send("No such currency")
 		}
 	} else {
