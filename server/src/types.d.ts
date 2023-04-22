@@ -56,4 +56,35 @@ interface CurrencyAverageInfo {
 		minValues: RepositoryRatesIndex[]
 	}
 }
+
+interface RepositoryDiffsIndex {
+	date: String // Day, for which value is applicalble
+	value: {
+		maxDiff: number // Maximum difference between buy and sell
+		day: String // First day, when maxdiff occured
+	}
+}
+
+// Object received from NBP API 
+interface TableDiffResult {
+	table: String,
+	currency: String,
+	code: String,
+	rates: {
+		no: String,
+		effectiveDate: String,
+		bid: number,
+		ask: number
+	}[]
+}
+
+// Object used to store info about maximum difference of prices of a currency
+interface CurrencyDifferenceInfo {
+	[currency: String]: {
+		newestIndex: String // Date of the newest entry in the list
+		maxDiffrences: RepositoryDiffsIndex[]
+	}
+}
+
+
 module exports {};

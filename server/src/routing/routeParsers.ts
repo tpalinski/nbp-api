@@ -12,7 +12,7 @@ export const currencyParser = async (req: Request, res: Response, next: NextFunc
 			req.currency = currency;
 			next();
 		} else {
-			res.status(404)
+			res.status(406)
 			res.send("No such currency")
 		}
 	} else {
@@ -43,6 +43,7 @@ export const nParser = async (req: Request, res: Response, next: NextFunction) =
 		if(isNaN(n)) {
 			res.status(400)
 			res.send("Wrong number format")
+			return;
 		}
 		if(n > 0 && n <= 255){
 			req.n = n
