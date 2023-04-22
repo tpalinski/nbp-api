@@ -18,6 +18,18 @@ interface SingleAverageResult {
 	}[]
 }
 
+// Response object received from NBP aPI
+interface TableAverageResult {
+	table: String,
+	no: String,
+	effectiveDate: String,
+	rates: {
+		currency: String,
+		code: String,
+		mid: number
+	}[]
+}
+
 // Response sent from a server for /exchange routes
 interface SingleAverageResponse {
 	currency: String,

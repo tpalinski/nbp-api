@@ -1,10 +1,13 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { router } from './routing/router';
+import { generateCurrencyCodes } from './currencyRepository';
 
 dotenv.config();
 const PORT =  process.env.PORT || "8080";
 export const app = express();
+
+generateCurrencyCodes();
 
 app.use("/", router);
 

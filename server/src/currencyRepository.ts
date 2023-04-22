@@ -1,6 +1,28 @@
-import moment, { weekdays } from "moment";
+import moment from "moment";
 
+
+// Cached info about currency average exchange rate
 let averageData: CurrencyAverageInfo = {}
+
+let currencyCodes: String[] = []
+
+export const generateCurrencyCodes = async () => {
+	console.log("Fetching currencies...")
+	const requestURL = "https://api.nbp.pl/api/exchangerates/tables/a?format=json"
+	let res = await fetch(new URL(requestURL));
+	if(!res.ok) throw new Error("Error: NBP api not responding")
+	let currencies = await res.json() as TableAverageResult[] 
+	currencyCodes = currencies[0].rates.map((entry) => {return entry.code.toLowerCase()})
+	console.log("Fetched possible currency codes:")
+	console.log(currencyCodes)
+}
+
+export const isValidCode = (currencyCode: String) : boolean => {
+	return currencyCodes.find((e) => e==currencyCode) !== undefined
+}
+
+
+
 // Check if repository contains the same data that nbp api would have
 export const isUpToDate = async (currencyCode: String): Promise<boolean> => {
 	//@ts-expect-error
