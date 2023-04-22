@@ -163,3 +163,17 @@ Possible errors:
 * 404 - N is invalid - N not in range if (0, 255>
 * 400 - Malformed N - n is not a number
 * 406 - Invalid currency - API does not support this currency
+
+## Collaborating
+
+To run server in dev mode, run (from server directory):
+```
+npm run dev
+```
+
+This command will start the server in watch mode.
+
+If you want to run unit tests, run: 
+```
+npm run test
+```
