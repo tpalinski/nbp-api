@@ -2,7 +2,8 @@
 namespace Express {
 	interface Request {
 		currency: String?,
-		date: String?
+		date: String?,
+		n: number?
 	}
 }
 
@@ -14,6 +15,18 @@ interface SingleAverageResult {
 	rates: {
 		no: String,
 		effectiveDate: String
+		mid: number
+	}[]
+}
+
+// Response object received from NBP aPI
+interface TableAverageResult {
+	table: String,
+	no: String,
+	effectiveDate: String,
+	rates: {
+		currency: String,
+		code: String,
 		mid: number
 	}[]
 }
@@ -30,10 +43,17 @@ interface SingleAverageResponse {
 interface RepositoryRatesIndex {
 	date: String, // Date which will be checked
 	value: {
-		maxAvg: number, // Maximum average exchange rate since the newest date
+		avg: number, // Min or max average exchange rate since the newest date
 		day: String // First day, when maxAvg was noted
 	}
 }
 
-
+// Object used to store info about average rates of a currency
+interface CurrencyAverageInfo {
+	[currency: String]: {
+		newestIndex: String,
+		maxValues: RepositoryRatesIndex[]
+		minValues: RepositoryRatesIndex[]
+	}
+}
 module exports {};

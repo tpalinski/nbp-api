@@ -22,6 +22,7 @@ const fetchCurrencyInfo = async (currencyCode: String, date: String): Promise<Si
 	}
 }
 
+
 exchangeRouter.get("/:currency/:date", currencyParser, dateParser, async (req: Request, res: Response) => {
 	if(req.currency !== null && req.date !== null){
 		const responseBody = await fetchCurrencyInfo(req.currency, req.date)
