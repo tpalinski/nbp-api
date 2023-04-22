@@ -5,7 +5,10 @@
   "main": "dist/server.js",
   "scripts": {
     "test": "jest",
-    "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\""
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
+    "start": "node dist/server.js",
+    "predeploy": "npm i && tsc",
+    "deploy": "npm start"
   },
   "repository": {
     "type": "git",
