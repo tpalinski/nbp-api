@@ -63,9 +63,9 @@ describe("GET /exchange/:currency/:date", () => {
 				return err ? done(err) : done()
 		})
 	})
-	test("Should return status 401 for query not supported by api", (done) => {
+	test("Should return status 404 for currency which is not supported by the server", (done) => {
 		req.get('/exchange/us/2020-04-27')
-		.expect(401)
+		.expect(404)
 		.expect((res) => {
 				res.body = "No data satisfying the parameters";
 		})
