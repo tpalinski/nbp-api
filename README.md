@@ -4,9 +4,11 @@ A RESTful API enabling users to check information regarding currencies and their
 
 ## Running the server
 
+### Local server
+
 To run this server locally, you need to have Node (^18.0.0) and npm installed
 
-To run the server, you need to first install all packages and build the source code by running the following commands while in the `server` directory:
+You need to first install all packages and build the source code by running the following commands while in the `server` directory:
 ```
 npm run predeploy
 ```
@@ -22,6 +24,14 @@ npm run deploy
 ```
 
 The server will start on port 8080 by default. To change this behaviour, provide your own .env file (see [.env example](https://github.com/tpalinski/nbp-api/blob/main/server/.env.example))
+
+### Docker
+
+Alternatively, you can run the server as a docker container by running these commands from the main directory:
+```
+docker build -t nbp-api .
+docker run -p 8080:{your_preferred_port} nbp-api
+```
 
 ## Usage
 
