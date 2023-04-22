@@ -1,9 +1,12 @@
 import moment from "moment";
 
-let lastUpdated = moment("1970-01-01")
 let averageData: CurrencyAverageInfo = {}
 // Check if repository contains the same data that nbp api would have
 export const isUpToDate = async (currencyCode: String): Promise<boolean> => {
+	//@ts-expect-error
+	if(!averageData.hasOwnProperty(currencyCode)) return false
+	//@ts-expect-error
+	let lastUpdated = moment(averageData[currencyCode].date)
 	// Data was fetched in the past, needs to be updated regardless of today's data availability
 	if(lastUpdated.isBefore(moment().subtract(1, 'days'), 'day')) {
 		return false;
@@ -22,6 +25,7 @@ export const isUpToDate = async (currencyCode: String): Promise<boolean> => {
 }
 
 export const updateIndexes = async(currencyCode: String): Promise<boolean> => {
+	console.log(`Fetching indexes for currency: ${currencyCode}`)
 	const requestURL = `https://api.nbp.pl/api/exchangerates/rates/a/${currencyCode}/last/255`
 	let res = await fetch(new URL(requestURL));
 	if(!res.ok) return false
@@ -49,6 +53,14 @@ export const updateIndexes = async(currencyCode: String): Promise<boolean> => {
 		newestIndex: indexes[0].date,
 		values: indexes
 	}
-	console.log(averageData)
 	return true;
 }
+
+
+export const getAverage = async (N: number): Promise<RepositoryRatesIndex> => {
+
+}
+
+
+
+
