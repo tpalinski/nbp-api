@@ -154,7 +154,6 @@ const getMaxDiffs = async (currencyData: TableDiffResult) : Promise<RepositoryDi
 		maxDiffs.push(res);
 		return curr;
 	}, {effectiveDate: '1970-01-01', ask: 1.0, bid: 1.0, no: 'nan'})
-	console.log(maxDiffs)
 	return maxDiffs;
 }
 
@@ -170,7 +169,6 @@ export const updateDiffIndexes = async(currencyCode: String): Promise<boolean> =
 		maxDifferences: maxIndexes,
 		newestIndex: maxIndexes[0].date// Date of the newest entry in the list
 	}
-	console.log(diffData)
 	return true;
 }
 
@@ -204,6 +202,18 @@ export const getAverage = async (currencyCode: String, N: number): Promise<GetAv
 	return res;
 }
 
-
+export const getDiffs = async(currencyCode: String, N: number): Promise<RepositoryDiffsIndex | null> => {
+	let isCached = await isUpToDate(currencyCode, CurrencyDataType.DIFFERENCE);
+	let res = null;
+	if(!isCached) {
+		let updateStatus = await updateDiffIndexes(currencyCode)
+		//@ts-expect-error
+		if(updateStatus) return diffData[currencyCode].maxDifferences[N]
+		return null;
+	} else {
+		//@ts-expect-error
+		return diffData[currencyCode].maxDifferences[N]
+	}
+}
 
 
