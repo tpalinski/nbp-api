@@ -35,5 +35,11 @@ interface RepositoryRatesIndex {
 	}
 }
 
-
+// Object used to store info about average rates of a currency
+interface CurrencyAverageInfo {
+	[currency: String]: {
+		newestIndex: String,
+		values: RepositoryRatesIndex[]
+	}
+}
 module exports {};
