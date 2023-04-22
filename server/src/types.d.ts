@@ -26,5 +26,14 @@ interface SingleAverageResponse {
 	averageRate: number
 }
 
+// Object used to store information about maximum average rates in CurrencyRepository
+interface RepositoryRatesIndex {
+	date: String, // Date which will be checked
+	value: {
+		maxAvg: number, // Maximum average exchange rate since the newest date
+		day: String // First day, when maxAvg was noted
+	}
+}
+
 
 module exports {};
