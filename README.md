@@ -2,6 +2,27 @@
 
 A RESTful API enabling users to check information regarding currencies and their prices
 
+## Running the server
+
+To run this server locally, you need to have Node (^18.0.0) and npm installed
+
+To run the server, you need to first install all packages and build the source code by running the following commands while in the `server` directory:
+```
+npm run predeploy
+```
+
+To start the server run:
+```
+npm start
+```
+
+Alternatively, you can run both of these steps in the same time by running (still in the `server` directory):
+```
+npm run deploy
+```
+
+The server will start on port 8080 by default. To change this behaviour, provide your own .env file (see [.env example](https://github.com/tpalinski/nbp-api/blob/main/server/.env.example))
+
 ## Usage
 
 ### **GET localhost:8080/exchange/{currency}/{date}**
