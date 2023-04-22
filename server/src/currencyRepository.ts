@@ -12,6 +12,8 @@ import moment from "moment";
 // Cached info about currency average exchange rate
 let averageData: CurrencyAverageInfo = {}
 
+let diffData: CurrencyDifferenceInfo = {}
+
 let currencyCodes: String[] = []
 
 export const generateCurrencyCodes = async () => {
@@ -29,14 +31,28 @@ export const isValidCode = (currencyCode: String) : boolean => {
 	return currencyCodes.find((e) => e===currencyCode) !== undefined
 }
 
-
+enum CurrencyDataType {
+	AVERAGE,
+	DIFFERENCE
+}
 
 // Check if repository contains the same data that nbp api would have
-export const isUpToDate = async (currencyCode: String): Promise<boolean> => {
+export const isUpToDate = async (currencyCode: String, repository: CurrencyDataType): Promise<boolean> => {
 	//@ts-expect-error
-	if(!averageData.hasOwnProperty(currencyCode)) return false
+	if(!averageData.hasOwnProperty(currencyCode) && repository == CurrencyDataType.AVERAGE) return false
 	//@ts-expect-error
-	let lastUpdated = moment(averageData[currencyCode].date)
+	if(!diffData.hasOwnProperty(currencyCode) && repository == CurrencyDataType.DIFFERENCE) return false
+	let dataType; 
+	switch(repository){
+		case CurrencyDataType.AVERAGE: 
+			dataType = averageData
+			break;
+		case CurrencyDataType.DIFFERENCE:
+			dataType = diffData
+			break;
+	}
+	//@ts-expect-error
+	let lastUpdated = moment(dataType[currencyCode].date)
 	// Data was fetched in the past, needs to be updated regardless of today's data availability
 	if(lastUpdated.isBefore(moment().subtract(1, 'days'), 'day')) {
 		return false;
@@ -54,12 +70,9 @@ export const isUpToDate = async (currencyCode: String): Promise<boolean> => {
 	return true;
 }
 
-export const updateIndexes = async(currencyCode: String): Promise<boolean> => {
-	console.log(`Fetching indexes for currency: ${currencyCode}`)
-	const requestURL = `https://api.nbp.pl/api/exchangerates/rates/a/${currencyCode}/last/255`
-	let res = await fetch(new URL(requestURL));
-	if(!res.ok) return false
-	let currencyData = await res.json() as SingleAverageResult
+
+
+const getMaxAverages = async (currencyData: SingleAverageResult): Promise<RepositoryRatesIndex[]> => {
 	let maxIndexes: RepositoryRatesIndex[] = [];
 	currencyData.rates.reduceRight((prev, curr) => {
 		let res: RepositoryRatesIndex = {
@@ -78,7 +91,10 @@ export const updateIndexes = async(currencyCode: String): Promise<boolean> => {
 		maxIndexes.push(res)
 		return curr;
 	}, {effectiveDate: '1970-01-01', mid: 0.0, no: 'nan'})
-	// Calculate minimum average values
+	return maxIndexes
+}
+
+const getMinAverages = async (currencyData: SingleAverageResult): Promise<RepositoryRatesIndex[]> => {
 	let minIndexes: RepositoryRatesIndex[] = []
 	currencyData.rates.reduceRight((prev, curr) => {
 		let res: RepositoryRatesIndex = {
@@ -97,6 +113,17 @@ export const updateIndexes = async(currencyCode: String): Promise<boolean> => {
 		minIndexes.push(res)
 		return curr;
 	}, {effectiveDate: '1970-01-01', mid: Number.MAX_VALUE, no: 'nan'})
+	return minIndexes;
+}
+
+export const updateAverageIndexes = async(currencyCode: String): Promise<boolean> => {
+	console.log(`Fetching indexes for currency: ${currencyCode}`)
+	const requestURL = `https://api.nbp.pl/api/exchangerates/rates/a/${currencyCode}/last/255`
+	let res = await fetch(new URL(requestURL));
+	if(!res.ok) return false
+	let currencyData = await res.json() as SingleAverageResult
+	let maxIndexes = await getMaxAverages(currencyData)
+	let minIndexes = await getMinAverages(currencyData)
 	//@ts-expect-error
 	averageData[currencyCode] = {
 		newestIndex: minIndexes[0].date,
@@ -106,15 +133,56 @@ export const updateIndexes = async(currencyCode: String): Promise<boolean> => {
 	return true;
 }
 
+const getMaxDiffs = async (currencyData: TableDiffResult) : Promise<RepositoryDiffsIndex[]> => {
+	let maxDiffs: RepositoryDiffsIndex[] = []
+	currencyData.rates.reduceRight((prev, curr) => {
+		let currDiff = curr.ask - curr.bid
+		let prevDiff = prev.ask - prev.bid
+		let res: RepositoryDiffsIndex = {
+			date: curr.effectiveDate,
+			value: {
+				maxDiff: currDiff,
+				day: curr.effectiveDate
+			}
+		}
+		if(prevDiff > currDiff) {
+			res.value.maxDiff = prevDiff
+			res.value.day = prev.effectiveDate
+			maxDiffs.push(res)
+			return prev;
+		}
+		maxDiffs.push(res);
+		return curr;
+	}, {effectiveDate: '1970-01-01', ask: 1.0, bid: 1.0, no: 'nan'})
+	console.log(maxDiffs)
+	return maxDiffs;
+}
+
+export const updateDiffIndexes = async(currencyCode: String): Promise<boolean> => {
+	console.log(`Fetching indexes (diff) for currency: ${currencyCode}`)
+	const requestURL = `https://api.nbp.pl/api/exchangerates/rates/c/${currencyCode}/last/255`
+	let res = await fetch(new URL(requestURL));
+	if(!res.ok) return false
+	let currencyData = await res.json() as TableDiffResult
+	let maxIndexes = await getMaxDiffs(currencyData)
+	//@ts-expect-error
+	diffData[currencyCode] = {
+		maxDifferences: maxIndexes,
+		newestIndex: maxIndexes[0].date// Date of the newest entry in the list
+	}
+	console.log(diffData)
+	return true;
+}
+
 export interface GetAverageResult {
 	min: RepositoryRatesIndex,
 	max: RepositoryRatesIndex
 }
 export const getAverage = async (currencyCode: String, N: number): Promise<GetAverageResult| null> => {
-	let isCached = await isUpToDate(currencyCode);
+	let isCached = await isUpToDate(currencyCode, CurrencyDataType.AVERAGE);
 	let res = null;
 	if(!isCached) {
-		let updateStatus = await updateIndexes(currencyCode)
+		let updateStatus = await updateAverageIndexes(currencyCode)
 		if(updateStatus) {
 			res = {
 				//@ts-expect-error
