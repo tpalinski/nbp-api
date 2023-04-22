@@ -18,7 +18,7 @@ export const generateCurrencyCodes = async () => {
 }
 
 export const isValidCode = (currencyCode: String) : boolean => {
-	return currencyCodes.find((e) => e==currencyCode) !== undefined
+	return currencyCodes.find((e) => e===currencyCode) !== undefined
 }
 
 
