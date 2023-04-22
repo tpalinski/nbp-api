@@ -30,7 +30,7 @@ interface SingleAverageResponse {
 interface RepositoryRatesIndex {
 	date: String, // Date which will be checked
 	value: {
-		maxAvg: number, // Maximum average exchange rate since the newest date
+		avg: number, // Min or max average exchange rate since the newest date
 		day: String // First day, when maxAvg was noted
 	}
 }
@@ -39,7 +39,8 @@ interface RepositoryRatesIndex {
 interface CurrencyAverageInfo {
 	[currency: String]: {
 		newestIndex: String,
-		values: RepositoryRatesIndex[]
+		maxValues: RepositoryRatesIndex[]
+		minValues: RepositoryRatesIndex[]
 	}
 }
 module exports {};

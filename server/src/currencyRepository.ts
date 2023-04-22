@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment, { weekdays } from "moment";
 
 let averageData: CurrencyAverageInfo = {}
 // Check if repository contains the same data that nbp api would have
@@ -30,35 +30,80 @@ export const updateIndexes = async(currencyCode: String): Promise<boolean> => {
 	let res = await fetch(new URL(requestURL));
 	if(!res.ok) return false
 	let currencyData = await res.json() as SingleAverageResult
-	let indexes: RepositoryRatesIndex[] = [];
+	let maxIndexes: RepositoryRatesIndex[] = [];
 	currencyData.rates.reduceRight((prev, curr) => {
 		let res: RepositoryRatesIndex = {
 			date: curr.effectiveDate,
 			value: {
-				maxAvg: curr.mid,
+				avg: curr.mid,
 				day: curr.effectiveDate
 			}
 		}
 		if(prev.mid > curr.mid) {
-			res.value.maxAvg = prev.mid
+			res.value.avg = prev.mid
 			res.value.day = prev.effectiveDate
-			indexes.push(res);
+			maxIndexes.push(res);
 			return prev;
 		}
-		indexes.push(res)
+		maxIndexes.push(res)
 		return curr;
 	}, {effectiveDate: '1970-01-01', mid: 0.0, no: 'nan'})
+	// Calculate minimum average values
+	let minIndexes: RepositoryRatesIndex[] = []
+	currencyData.rates.reduceRight((prev, curr) => {
+		let res: RepositoryRatesIndex = {
+			date: curr.effectiveDate,
+			value: {
+				avg: curr.mid,
+				day: curr.effectiveDate
+			}
+		}
+		if(prev.mid < curr.mid) {
+			res.value.avg = prev.mid
+			res.value.day = prev.effectiveDate
+			minIndexes.push(res);
+			return prev;
+		}
+		minIndexes.push(res)
+		return curr;
+	}, {effectiveDate: '1970-01-01', mid: Number.MAX_VALUE, no: 'nan'})
 	//@ts-expect-error
 	averageData[currencyCode] = {
-		newestIndex: indexes[0].date,
-		values: indexes
+		newestIndex: minIndexes[0].date,
+		maxValues: maxIndexes,
+		minValues: minIndexes
 	}
 	return true;
 }
 
-
-export const getAverage = async (N: number): Promise<RepositoryRatesIndex> => {
-
+export interface GetAverageResult {
+	min: RepositoryRatesIndex,
+	max: RepositoryRatesIndex
+}
+export const getAverage = async (currencyCode: String, N: number): Promise<GetAverageResult| null> => {
+	let isCached = await isUpToDate(currencyCode);
+	let res = null;
+	if(!isCached) {
+		let updateStatus = await updateIndexes(currencyCode)
+		if(updateStatus) {
+			res = {
+				//@ts-expect-error
+				max: averageData[currencyCode].maxValues[N],
+				//@ts-expect-error
+				min: averageData[currencyCode].minValues[N]
+			}; 
+		} else {
+			return null;
+		}
+	} else {
+		res = {
+			//@ts-expect-error
+			max: averageData[currencyCode].maxValues[N],
+			//@ts-expect-error
+			min: averageData[currencyCode].minValues[N]
+		}; 
+	}
+	return res;
 }
 
 
