@@ -33,6 +33,10 @@ docker build -t nbp-api .
 docker run -p 8080:{your_preferred_port} nbp-api
 ```
 
+### Client application
+
+For detailed instructions for running the client application, see [instructions](https://github.com/tpalinski/nbp-api/blob/main/client/README.md)
+
 ## Usage
 
 ### **GET localhost:8080/exchange/{currency}/{date}**
