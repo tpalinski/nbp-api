@@ -41,8 +41,11 @@ h1 {
   text-align: center;
 }
 
+.request-form form * {
+  margin: 0.1rem;
+}
+
 .info-display {
-  
   margin: 1rem;
   display: flex;
   flex-direction: column;

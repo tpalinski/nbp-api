@@ -31,8 +31,10 @@ export function DateForm(){
           handleSubmit()
         }}>
             <label htmlFor="currency"> Enter currency symbol </label>
-            <input type="text" id='currency' name='currency' onChange={handleCurrencyChange}/>
-            <input type="date" id='date' onChange={handleDateChange} min="2002-01-02" /> 
+            <input type="text" name='currency' onChange={handleCurrencyChange}/>
+
+            <label htmlFor='date'> Enter date </label>
+            <input type="date" name='date' onChange={handleDateChange} min="2002-01-02" /> 
             <input type="submit" /> 
         </form>
       <div className='info-display'>
