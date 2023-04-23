@@ -16,10 +16,6 @@ interface AverageResponse {
     }
 }
 
-enum RequestType {
-  AVERAGE = "Average Currency Value",
-  DIFFERENCE = "Maximum Difference"
-}
 
 interface DiffResponse {
 	date: String // Day of Nth entry
@@ -27,6 +23,13 @@ interface DiffResponse {
 		maxDiff: number // Maximum difference between buy and sell
 		day: String // First day when maxdiff occured
 	}
+}
+
+interface ExchangeResponse {
+	currency: String, // Full name of the currency
+	code: String, // Currency code, e.g. gbp for British Pound
+	date: String, // Supplied date
+	averageRate: number // Average exchange rate
 }
 
 module exports {}

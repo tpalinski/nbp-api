@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import { DateForm } from './components/DateForm';
 import { Nform } from './components/Nform';
 
 
@@ -14,6 +15,7 @@ function App() {
         <div className='forms'>
           <Nform requestType={'average'}/>
           <Nform requestType={'maximum'}/>
+          <DateForm />
         </div>
       </section>
     </div>

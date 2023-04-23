@@ -14,3 +14,10 @@ export const getDiffs = async (currency: String, N: number): Promise<DiffRespons
   let data = await res.json() as DiffResponse
   return data
 }
+
+export const getExchange = async (currency: String, date: String): Promise<ExchangeResponse> => {
+  let res = await fetch(new URL(`${REQUEST_URL}/exchange/${currency}/${date}`)) 
+  if(!res.ok) throw new Error("Can't fetch data from the API")
+  let data = await res.json() as ExchangeResponse
+  return data
+}
