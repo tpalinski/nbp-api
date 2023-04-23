@@ -1,5 +1,6 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors'
 import { router } from './routing/router';
 import { generateCurrencyCodes } from './currencyRepository';
 
@@ -9,6 +10,9 @@ export const app = express();
 
 generateCurrencyCodes();
 
+app.use(cors({
+	origin: "*"
+}))
 app.use("/", router);
 
 app.get("/", async (req: Request, res: Response) => {
