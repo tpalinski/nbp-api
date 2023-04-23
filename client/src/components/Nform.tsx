@@ -44,8 +44,10 @@ export function Nform(props: NformProps) {
           handleSubmit()
         }}>
             <label htmlFor="currency"> Enter currency symbol </label>
-            <input type="text" id='currency' name='currency' onChange={handleCurrencyChange}/>
-            <input type="number" id='number' onChange={handleNChange}max="255" min="0" /> 
+            <input type="text" name='currency' onChange={handleCurrencyChange}/>
+
+            <label htmlFor='number'> Enter the amount of entries you want to check </label>
+            <input type="number" name='number' onChange={handleNChange}max="255" min="0" /> 
             <input type="submit" /> 
         </form>
       <div className='info-display'>
