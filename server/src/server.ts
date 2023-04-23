@@ -10,9 +10,7 @@ export const app = express();
 
 generateCurrencyCodes();
 
-app.use(cors({
-	origin: "*"
-}))
+app.use(cors())
 app.use("/", router);
 
 app.get("/", async (req: Request, res: Response) => {

@@ -25,3 +25,27 @@ h1 {
   background: var(--text-color-light);
   border-radius: 1rem;
 }
+
+.request-form {
+  border: 0.5rem solid var(--text-color-main);
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.request-form form{
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.info-display {
+  
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}

@@ -16,4 +16,17 @@ interface AverageResponse {
     }
 }
 
+enum RequestType {
+  AVERAGE = "Average Currency Value",
+  DIFFERENCE = "Maximum Difference"
+}
+
+interface DiffResponse {
+	date: String // Day of Nth entry
+	value: {
+		maxDiff: number // Maximum difference between buy and sell
+		day: String // First day when maxdiff occured
+	}
+}
+
 module exports {}

@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 import { Nform } from './components/Nform';
 
+
+
 function App() {
   return (
     <div className="wrapper">
@@ -10,7 +12,8 @@ function App() {
       </section>
       <section>
         <div className='forms'>
-          <Nform/>
+          <Nform requestType={'average'}/>
+          <Nform requestType={'maximum'}/>
         </div>
       </section>
     </div>
