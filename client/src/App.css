@@ -1,0 +1,51 @@
+:root {
+  --main-color: #d9d2cc;
+  --text-color-light: #d9b18e;
+  --text-color-main: #723e31;
+}
+
+
+body {
+  background: var(--main-color);
+  color: var(--text-color-main);
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.forms {
+  background: var(--text-color-light);
+  border-radius: 1rem;
+}
+
+.request-form {
+  border: 0.5rem solid var(--text-color-main);
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.request-form form{
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.info-display {
+  
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
